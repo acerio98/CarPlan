@@ -47,7 +47,12 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
 
     public void onClick(View v){
         if(v.getId()==R.id.createAccountButton){
-            createNewAccount();
+            try {
+                createNewAccount();
+            }
+            catch(SQLException e){
+                System.out.println("SQLiteException while creating new account.");
+            }
         }
     }
 
@@ -79,7 +84,6 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
                 myAddress += cursor.getString(5);
                 myAddress += cursor.getString(6);
                 cursor.close();
-            } else {
             }
 
             Toast.makeText(getApplicationContext(), myAddress,

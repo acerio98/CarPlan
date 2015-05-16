@@ -1,25 +1,32 @@
 package com.vanrio.carplan;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.sql.SQLException;
 
 
-public class MainMenuActivity extends Activity {
+public class MainMenuActivity extends Activity implements View.OnClickListener{
 
     UserDB data;
+    Button signUpButton;
+    Button signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        signUpButton = (Button)findViewById(R.id.signUpButton);
+        signUpButton.setOnClickListener(this);
 
         data = new UserDB(this);
         try {
@@ -29,6 +36,11 @@ public class MainMenuActivity extends Activity {
         }
     }
 
+    public void onClick(View v) {
+        if (v.getId() == R.id.signUpButton) {
+            startActivity(new Intent(MainMenuActivity.this, SignUpActivity.class));
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
