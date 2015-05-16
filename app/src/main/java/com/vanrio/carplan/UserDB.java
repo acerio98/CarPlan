@@ -26,7 +26,7 @@ public class UserDB {
     public static final String KEY_CITY = "city";
     public static final String KEY_STATE = "state";
 
-    public static final String[] KEYS_ALL = { UserDB.KEY_USERNAME, UserDB.KEY_PASSWORD, UserDB.KEY_NAME, UserDB.KEY_PICTURE, UserDB.KEY_DOB, UserDB.KEY_ADDRESS,
+    public static final String[] KEYS_ALL = { UserDB.KEY_USERNAME, UserDB.KEY_PASSWORD, UserDB.KEY_NAME, UserDB.KEY_PICTURE, UserDB.KEY_ADDRESS,
                                                                    UserDB.KEY_CITY, UserDB.KEY_STATE};
 
     private Context context;
@@ -59,18 +59,7 @@ public class UserDB {
         map.put(UserDB.KEY_CITY, city);
         map.put(UserDB.KEY_STATE, state);
 
-
-        String DATABASE_INSERT = "insert into " + DATABASE_TABLE + "("+
-                UserDB.KEY_USERNAME + ", " +
-                UserDB.KEY_PASSWORD + ", " +
-                UserDB.KEY_NAME + ", " +
-                UserDB.KEY_PICTURE + ", " +
-                UserDB.KEY_ADDRESS + ", " +
-                UserDB.KEY_CITY + ", " +
-                UserDB.KEY_STATE + ")"+
-                "values (" +
-                user +
-
+        database.insert(DATABASE_TABLE, null, map);
     }
 
     public Cursor queryAll(){
@@ -83,7 +72,7 @@ public class UserDB {
 
 
 
-    public Cursor query(long username) throws SQLException{
+    public Cursor query(String username) throws SQLException{
         Cursor cursor = database.query(true, DATABASE_TABLE,
                 KEYS_ALL,
                 KEY_USERNAME + "=" + username,

@@ -1,6 +1,7 @@
 package com.vanrio.carplan;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,7 +51,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    public void createNewAccount(){
+    public void createNewAccount() throws SQLException{
         // make sure that the two passwords are the same.
         if(passwordField.getText() != reenterPasswordField.getText()){
             Toast.makeText(getApplicationContext(), "Please make sure that both of the passwords entered are the same.",
@@ -65,6 +66,24 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
             String address = addressField.getText()+"";
             String city = cityField.getText()+"";
             String state = stateField.getText()+"";
+
+            data.addToDB(username, password, name, address, city, state);
+
+            Cursor cursor = data.query(username);
+
+            String myAddress = "";
+
+            if (cursor.moveToFirst()) {
+                cursor.moveToFirst();
+                myAddress += cursor.getString(4);
+                myAddress += cursor.getString(5);
+                myAddress += cursor.getString(6);
+                cursor.close();
+            } else {
+            }
+
+            Toast.makeText(getApplicationContext(), myAddress,
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
