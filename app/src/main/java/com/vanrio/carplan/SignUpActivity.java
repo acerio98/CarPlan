@@ -2,7 +2,6 @@ package com.vanrio.carplan;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 
 public class SignUpActivity extends Activity implements View.OnClickListener{
@@ -77,7 +75,9 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
 
             data.addToDB(username, password, name, address, city, state);
 
-            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+            Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                    i.putExtra("my_username", username);
+            startActivity(i);
 
 //            Cursor cursor = data.query(username);
 

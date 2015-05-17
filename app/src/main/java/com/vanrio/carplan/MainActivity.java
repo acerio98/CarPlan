@@ -21,7 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener{
+
+    Button newButton;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getActionBar().hide();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -52,8 +54,16 @@ public class MainActivity extends Activity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        newButton = (Button)findViewById(R.id.newButton);
+
     }
 
+    @Override
+    public void onClick(View v){
+        if(v.getId() == R.id.newButton){
+            startActivity(new Intent(MainActivity.this, SearchGroupsActivity.class));
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,13 +160,16 @@ public class MainActivity extends Activity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.groups_my, container, false);
             newButton = (Button)rootView.findViewById(R.id.newButton);
+            newButton.setOnClickListener(this);
             return rootView;
         }
 
         @Override
         public void onClick(View v){
             if(v.getId() == R.id.newButton){
-                startActivity(new Intent(MainActivity.this, SearchGroupsActivity.class));
+                Intent i = new Intent(getActivity(), SearchGroupsActivity.class);
+                i.putExtra("my_username", getActivity().getIntent().getStringExtra("my_username"));
+                startActivity(i);
             }
         }
     }

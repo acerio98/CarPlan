@@ -53,6 +53,7 @@ public class GroupDB {
         String[] peopleList = {creatorUsername};
         map.put(GroupDB.KEY_PEOPLE_LIST, convertArrayToString(peopleList));
         String[] carpoolList = {};
+        map.put(GroupDB.KEY_CARPOOL_LIST, convertArrayToString(carpoolList));
         map.put(GroupDB.KEY_DESC, desc);
         map.put(GroupDB.KEY_ADDRESS, address);
         map.put(GroupDB.KEY_CITY, city);
@@ -70,22 +71,23 @@ public class GroupDB {
         //      String[] selectionArgs, String groupBy, String having, String orderBy)
     }
 
-    public Cursor query(String usernameSearch) throws SQLException{
+    public Cursor query(String groupnameSearch) throws SQLException{
         Cursor cursor = database.query(true, DATABASE_TABLE,
                 KEYS_ALL,
-                KEY_GROUPNAME + " like \"" + usernameSearch + "%\"",
-                null, null, null, null, null); // query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having,
+                KEY_GROUPNAME + " like ?",
+                new String[] { groupnameSearch+"%" }, null, null, null, null); // query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having,
         //      String orderBy, String limit, CancellationSignal cancellationSignal)
         cursor.moveToFirst();
         return cursor;
     }
 
-    public Cursor searchQuery(String username) throws SQLException{
+    public Cursor toQuery(String groupname) throws SQLException{
         Cursor cursor = database.query(true, DATABASE_TABLE,
                 KEYS_ALL,
-                KEY_GROUPNAME + "=\"" + username + "\"",
+                KEY_GROUPNAME + " = \"" + groupname + "\"",
                 null, null, null, null, null); // query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having,
         //      String orderBy, String limit, CancellationSignal cancellationSignal)
+        System.out.println("~~~~~~~~~~~"+cursor.toString());
         cursor.moveToFirst();
         return cursor;
     }

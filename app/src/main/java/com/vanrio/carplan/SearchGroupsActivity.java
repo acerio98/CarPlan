@@ -12,20 +12,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.sql.SQLException;
 
 
-public class SearchGroupsActivity extends ListActivity {
+public class SearchGroupsActivity extends ListActivity implements View.OnClickListener{
 
     GroupDB data;
+    Button createGroupButton, searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_groups);
+        getActionBar().hide();
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -39,6 +43,12 @@ public class SearchGroupsActivity extends ListActivity {
             }
         }
 
+        createGroupButton = (Button)findViewById(R.id.newGroupButtonS);
+        createGroupButton.setOnClickListener(this);
+
+        searchButton = (Button)findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(this);
+
         data = new GroupDB(this);
         try {
             data.open();
@@ -47,8 +57,27 @@ public class SearchGroupsActivity extends ListActivity {
         }
     }
 
+    public void onClick(View v){
+        if(v.getId() == R.id.newGroupButtonS) {
+            Intent i = new Intent(SearchGroupsActivity.this, newGroupActivity.class);
+            i.putExtra("my_username", getIntent().getStringExtra("my_username"));
+            startActivity(i);
+        }
+        else if(v.getId() == R.id.searchButton){
+            onSearchRequested();
+        }
+    }
+
+
     public void doMySearch(String query) throws SQLException{
-        Cursor searchCursor = data.searchQuery(query);
+        System.out.println(query);
+        Cursor zoonCursor = data.toQuery("Yoga");
+        if (zoonCursor.moveToFirst()) {
+                zoonCursor.moveToFirst();
+                System.out.println(zoonCursor.getString(2));
+                zoonCursor.close();
+        }
+        Cursor searchCursor = data.query(query);
         CursorAdapter cursorAdapter = new GroupsCursorAdapter(this, searchCursor);
         setListAdapter(cursorAdapter);
 
@@ -58,6 +87,10 @@ public class SearchGroupsActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_groups, menu);
+
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
