@@ -68,7 +68,7 @@
         android:id="@+id/signUpButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="54dp" />
+        android:layout_marginBottom="94dp" />
 
     <Button
         android:layout_width="100dp"
@@ -87,7 +87,7 @@
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="79dp"
+        android:layout_marginTop="30dp"
         android:textSize="50dp"
         android:typeface="sans" />
 

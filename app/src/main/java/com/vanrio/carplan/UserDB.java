@@ -75,7 +75,7 @@ public class UserDB {
     public Cursor query(String username) throws SQLException{
         Cursor cursor = database.query(true, DATABASE_TABLE,
                 KEYS_ALL,
-                KEY_USERNAME + "=" + username,
+                KEY_USERNAME + "=\"" + username + "\"",
                 null, null, null, null, null); // query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having,
                                                //      String orderBy, String limit, CancellationSignal cancellationSignal)
         cursor.moveToFirst();
@@ -91,7 +91,7 @@ public class UserDB {
                 UserDB.KEY_PICTURE + " text, "+
                 UserDB.KEY_ADDRESS + " text, "+
                 UserDB.KEY_CITY + " text, "+
-                UserDB.KEY_STATE + " text, "+
+                UserDB.KEY_STATE + " text"+
                 ");";
 
         public DataHelper(Context context){

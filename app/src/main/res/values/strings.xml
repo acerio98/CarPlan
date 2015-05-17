@@ -10,5 +10,10 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="title_activity_add_group">AddGroupActivity</string>
+    <string name="title_activity_group_info">GroupInfoActivity</string>
+
+    <string name="search_hint">Search groups</string>
+    <string name="title_activity_search_groups">SearchGroupsActivity</string>
 
 </resources>

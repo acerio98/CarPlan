@@ -20,6 +20,27 @@
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up" >
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".AddGroupActivity"
+            android:label="@string/title_activity_add_group" >
+        </activity>
+        <activity
+            android:name=".GroupInfoActivity"
+            android:label="@string/title_activity_group_info" >
+        </activity>
+        <activity
+            android:name=".SearchGroupsActivity"
+            android:label="@string/title_activity_search_groups" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable"/>
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.vanrio.carplan;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -58,9 +59,11 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
 
     public void createNewAccount() throws SQLException{
         // make sure that the two passwords are the same.
-        if(passwordField.getText() != reenterPasswordField.getText()){
-            Toast.makeText(getApplicationContext(), "Please make sure that both of the passwords entered are the same.",
+        if(!(passwordField.getText()+"").equals(reenterPasswordField.getText()+"")){
+            Toast.makeText(getApplicationContext(), "Not the same: "+passwordField.getText() + " / " + reenterPasswordField.getText(),
                     Toast.LENGTH_SHORT).show();
+
+            //Please make sure that both of the passwords entered are the same
         }
         else{
             // actually make the account
@@ -74,20 +77,22 @@ public class SignUpActivity extends Activity implements View.OnClickListener{
 
             data.addToDB(username, password, name, address, city, state);
 
-            Cursor cursor = data.query(username);
+            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 
-            String myAddress = "";
+//            Cursor cursor = data.query(username);
 
-            if (cursor.moveToFirst()) {
-                cursor.moveToFirst();
-                myAddress += cursor.getString(4);
-                myAddress += cursor.getString(5);
-                myAddress += cursor.getString(6);
-                cursor.close();
-            }
-
-            Toast.makeText(getApplicationContext(), myAddress,
-                    Toast.LENGTH_SHORT).show();
+//            String myAddress = "";
+//
+//            if (cursor.moveToFirst()) {
+//                cursor.moveToFirst();
+//                myAddress += cursor.getString(4);
+//                myAddress += cursor.getString(5);
+//                myAddress += cursor.getString(6);
+//                cursor.close();
+//            }
+//
+//            Toast.makeText(getApplicationContext(), myAddress,
+//                    Toast.LENGTH_SHORT).show();
         }
     }
 
