@@ -54,6 +54,10 @@
             android:name=".FindGroupsActivity"
             android:label="@string/title_activity_find_groups" >
         </activity>
+        <activity
+            android:name=".addUsers"
+            android:label="@string/title_activity_add_users" >
+        </activity>
     </application>
 
 </manifest>

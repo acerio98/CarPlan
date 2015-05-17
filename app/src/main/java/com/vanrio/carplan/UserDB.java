@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Austin on 5/16/15.
@@ -25,9 +27,11 @@ public class UserDB {
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_CITY = "city";
     public static final String KEY_STATE = "state";
+    public static final String KEY_GROUPS = "groups";
+    public static final String KEY_INVITATIONS = "invitations";
 
     public static final String[] KEYS_ALL = { UserDB.KEY_USERNAME, UserDB.KEY_PASSWORD, UserDB.KEY_NAME, UserDB.KEY_PICTURE, UserDB.KEY_ADDRESS,
-                                                                   UserDB.KEY_CITY, UserDB.KEY_STATE};
+                                                                   UserDB.KEY_CITY, UserDB.KEY_STATE, UserDB.KEY_GROUPS, UserDB.KEY_INVITATIONS};
 
     private Context context;
     private SQLiteDatabase database;
@@ -58,6 +62,8 @@ public class UserDB {
         map.put(UserDB.KEY_ADDRESS, address);
         map.put(UserDB.KEY_CITY, city);
         map.put(UserDB.KEY_STATE, state);
+        map.put(UserDB.KEY_GROUPS, "-X-");
+        map.put(UserDB.KEY_INVITATIONS,"-X-");
 
         database.insert(DATABASE_TABLE, null, map);
     }
@@ -82,6 +88,90 @@ public class UserDB {
         return cursor;
     }
 
+    public void addGroupForUser(String username, String groupname) throws SQLException{
+        ContentValues map = new ContentValues();
+
+        Cursor c = query(username);
+        String currentArrayString = "-X-";
+        if(c.moveToFirst()){
+            c.moveToFirst();
+            currentArrayString = c.getString(7);
+            if(currentArrayString.equals("-X-")){
+                currentArrayString = groupname+strSeparator;
+            }
+            else{
+                currentArrayString += strSeparator + groupname;
+            }
+        }
+        map.put(UserDB.KEY_GROUPS, currentArrayString);
+        database.update(DATABASE_TABLE, map, KEY_USERNAME + "=\"" + username + "\"", null);
+    }
+
+    public void addInvitationForUser(String username, String invitname) throws SQLException{
+        ContentValues map = new ContentValues();
+
+        Cursor c = query(username);
+        String currentArrayString = "-X-";
+        if(c.moveToFirst()){
+            c.moveToFirst();
+            currentArrayString = c.getString(8);
+            if(currentArrayString.equals("-X-")){
+                currentArrayString = invitname+strSeparator;
+            }
+            else{
+                currentArrayString += strSeparator + invitname;
+            }
+        }
+        map.put(UserDB.KEY_INVITATIONS, currentArrayString);
+        database.update(DATABASE_TABLE, map, KEY_USERNAME + "=\"" + username + "\"", null);
+    }
+
+    public void removeInvitationForUser(String username, String invitname) throws SQLException{
+        ContentValues map = new ContentValues();
+
+        Cursor c = query(username);
+        String currentArrayString = "-X-";
+        if(c.moveToFirst()){
+            c.moveToFirst();
+            currentArrayString = c.getString(8);
+            String[] currentArray = convertStringToArray(currentArrayString);
+            ArrayList<String> currentArrayList = new ArrayList<String>();
+
+            for(String item : currentArray){
+                currentArrayList.add(item);
+            }
+
+            if(currentArrayList.contains(invitname)){
+                currentArrayList.remove(currentArrayList.indexOf(invitname));
+                String[] newArray = (String[])currentArrayList.toArray();
+                String newArrayString = convertArrayToString(newArray);
+                currentArrayString = newArrayString;
+            }
+        }
+        map.put(UserDB.KEY_INVITATIONS, currentArrayString);
+        database.update(DATABASE_TABLE, map, KEY_USERNAME + "=\"" + username + "\"", null);
+    }
+
+    //Thanks to Muhammad Nabeel Arif from stackoverflow.com 1/29/12
+    public static String strSeparator = "__,__";
+    public static String convertArrayToString(String[] array){
+        String str = "";
+        for (int i = 0;i<array.length; i++) {
+            str = str+array[i];
+            // Do not append comma at the end of last element
+            if(i<array.length-1){
+                str = str+strSeparator;
+            }
+        }
+        return str;
+    }
+    public static String[] convertStringToArray(String str){
+        System.out.println(str);
+        String[] arr = str.split(strSeparator);
+        System.out.println(arr.toString());
+        return arr;
+    }
+
     private static class DataHelper extends SQLiteOpenHelper {
 
         private static final String DATABASE_CREATE = "create table "+ DATABASE_TABLE+ " ("+
@@ -91,7 +181,9 @@ public class UserDB {
                 UserDB.KEY_PICTURE + " text, "+
                 UserDB.KEY_ADDRESS + " text, "+
                 UserDB.KEY_CITY + " text, "+
-                UserDB.KEY_STATE + " text"+
+                UserDB.KEY_STATE + " text, "+
+                UserDB.KEY_GROUPS + "text, " +
+                UserDB.KEY_INVITATIONS + "text"+
                 ");";
 
         public DataHelper(Context context){

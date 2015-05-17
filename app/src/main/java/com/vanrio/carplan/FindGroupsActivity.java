@@ -40,7 +40,6 @@ public class FindGroupsActivity extends Activity implements View.OnClickListener
 
         Cursor cursor = data.queryAll();
         String myAddress = "";
-
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
             Button b = new Button(this);
@@ -52,6 +51,8 @@ public class FindGroupsActivity extends Activity implements View.OnClickListener
                 public void onClick(View v) {
                     Intent i = new Intent(FindGroupsActivity.this, GroupInfoActivity.class);
                     i.putExtra("groupname", groupname);
+                    i.putExtra("my_username", getIntent().getStringExtra("my_username"));
+                    i.putExtra("button_visiblity", 0);
                     startActivity(i);
                 }
             });
@@ -67,7 +68,9 @@ public class FindGroupsActivity extends Activity implements View.OnClickListener
     @Override
     public void onClick(View v){
         if(v.getId()==R.id.newGroupBut){
-            startActivity(new Intent(FindGroupsActivity.this, newGroupActivity.class));
+            Intent i = new Intent(FindGroupsActivity.this, newGroupActivity.class);
+            i.putExtra("my_username", getIntent().getStringExtra("my_username"));
+            startActivity(i);
         }
     }
 

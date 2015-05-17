@@ -14,21 +14,25 @@ import android.widget.TextView;
 import java.sql.SQLException;
 
 
-public class GroupInfoActivity extends Activity {
+public class GroupInfoActivity extends Activity implements View.OnClickListener{
 
     TextView nameLabel, numCarpoolsLabel, descLabel, locationLabel, creatorLabel;
     LinearLayout membersListLayout;
+    Button joinGroupButton;
 
-    GroupDB data;
+    GroupDB gData;
+    UserDB uData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_info);
 
-        data = new GroupDB(this);
+        gData = new GroupDB(this);
+        uData = new UserDB(this);
         try {
-            data.open();
+            gData.open();
+            uData.open();
         }catch(SQLException e){
             System.out.println("Ohno SQL");
         }
@@ -36,31 +40,49 @@ public class GroupInfoActivity extends Activity {
         nameLabel = (TextView)findViewById(R.id.nameLabel);
         numCarpoolsLabel = (TextView)findViewById(R.id.numCarpoolsLabel);
         descLabel = (TextView)findViewById(R.id.descLabel);
-        locationLabel = (TextView)findViewById(R.id.addressLabel);
+        locationLabel = (TextView)findViewById(R.id.locationLabel);
         creatorLabel = (TextView)findViewById(R.id.creatorLabel);
 
         membersListLayout = (LinearLayout)findViewById(R.id.membersListLayout);
 
+        joinGroupButton = (Button)findViewById(R.id.joinGroupButton);
+        joinGroupButton.setOnClickListener(this);
+
+        int visib = getIntent().getIntExtra("button_visiblity", 1);
+        joinGroupButton.setVisibility(visib);
+
         String groupname = getIntent().getStringExtra("groupname");
         nameLabel.setText(groupname);
 
+        System.out.println("_____ "+groupname);
+
         try{
-            Cursor cursor = data.query(groupname);
+            Cursor cursor = gData.query(groupname);
             if(cursor.moveToFirst()) {
                 cursor.moveToFirst();
-                String[] peopleList = data.convertStringToArray(cursor.getString(1));
-                String[] carpoolList = data.convertStringToArray(cursor.getString(2));
+                String[] peopleList = GroupDB.convertStringToArray(cursor.getString(1));
+                String carpoolText = "";
+                System.out.println("---> "+cursor.getString(2));
+                if(cursor.getString(2).equals("")){
+                    carpoolText = 0 + "";
+                }
+                else{
+                    String[] carpoolList = GroupDB.convertStringToArray(cursor.getString(2));
+                    carpoolText = carpoolList.length + "";
+                }
+
                 String desc = cursor.getString(3);
                 String location = cursor.getString(4) + " " + cursor.getString(5) + ", " +cursor.getString(6);
                 String creator = cursor.getString(7);
-
+                System.out.println("-->"+cursor.getString(7));
+                //peopleList = ["Johny", "other kid", "halp me plz", "work?"];
                 for(String person : peopleList){
                     TextView p = new TextView(this);
                     p.setText(person);
                     membersListLayout.addView(p);
                 }
 
-                numCarpoolsLabel.setText(carpoolList.length+"");
+                numCarpoolsLabel.setText(carpoolText);
                 descLabel.setText(desc);
                 locationLabel.setText(location);
                 creatorLabel.setText(creator);
@@ -69,6 +91,22 @@ public class GroupInfoActivity extends Activity {
         }
         catch(SQLException e){
             System.out.println("Group Info SQLException.");
+        }
+    }
+
+    @Override
+    public void onClick(View v){
+        if(v.getId()==R.id.joinGroupButton){
+            String username = getIntent().getStringExtra("my_username");
+            String groupname = getIntent().getStringExtra("groupname");
+            try{
+                uData.addGroupForUser(username, groupname);
+                gData.addUserToGroup(groupname, username);
+            }
+            catch(SQLException e){
+                System.out.println("Ohno SQL GroupInfo Onclick.");
+            }
+            finish();
         }
     }
 

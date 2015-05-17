@@ -1,5 +1,6 @@
 package com.vanrio.carplan;
 
+import java.sql.SQLException;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -8,6 +9,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -133,6 +136,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public static class PlaceholderFragment extends Fragment implements View.OnClickListener{
 
         Button newButton;
+        LinearLayout groupButtonLayout;
+        UserDB uData;
 
         /**
          * The fragment argument representing the section number for this
@@ -159,6 +164,49 @@ public class MainActivity extends Activity implements View.OnClickListener{
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.groups_my, container, false);
+            groupButtonLayout = (LinearLayout)getActivity().findViewById(R.id.group_button_layout);
+
+            String username = getActivity().getIntent().getStringExtra("my_username");
+
+            uData = new UserDB(getActivity());
+            Cursor cursor;
+            try {
+                uData.open();
+                cursor = uData.query(username);
+
+                if (cursor.moveToFirst()) {
+                    cursor.moveToFirst();
+
+                    String groupsArrayString = cursor.getString(7);
+
+                    if(!groupsArrayString.equals("-X-")){
+                        String[] groupsArray = UserDB.convertStringToArray(groupsArrayString);
+
+                        for(String groupname : groupsArray){
+                            Button groupButton = new Button(getActivity());
+                            groupButton.setWidth(1000);
+                            groupButton.setHeight(400);
+                            groupButton.setBackgroundResource(R.drawable.add_button);
+                            groupButton.setText(groupname+"");
+                            groupButton.setGravity(0x05);
+                            groupButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(getActivity(), newGroupActivity.class);
+                                    i.putExtra("button_visiblity", 1);
+                                    startActivity(i);
+                                }
+                            });
+                        }
+                    }
+                    cursor.close();
+                }
+            }catch(SQLException e){
+                System.out.println("Ohno SQL");
+            }
+
+
+
             newButton = (Button)rootView.findViewById(R.id.newButton);
             newButton.setOnClickListener(this);
             return rootView;

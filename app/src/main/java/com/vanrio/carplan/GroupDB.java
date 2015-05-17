@@ -52,8 +52,7 @@ public class GroupDB {
         map.put(GroupDB.KEY_GROUPNAME, name);
         String[] peopleList = {creatorUsername};
         map.put(GroupDB.KEY_PEOPLE_LIST, convertArrayToString(peopleList));
-        String[] carpoolList = {};
-        map.put(GroupDB.KEY_CARPOOL_LIST, convertArrayToString(carpoolList));
+        map.put(GroupDB.KEY_CARPOOL_LIST, "-");
         map.put(GroupDB.KEY_DESC, desc);
         map.put(GroupDB.KEY_ADDRESS, address);
         map.put(GroupDB.KEY_CITY, city);
@@ -87,9 +86,22 @@ public class GroupDB {
                 KEY_GROUPNAME + " = \"" + groupname + "\"",
                 null, null, null, null, null); // query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having,
         //      String orderBy, String limit, CancellationSignal cancellationSignal)
-        System.out.println("~~~~~~~~~~~"+cursor.toString());
         cursor.moveToFirst();
         return cursor;
+    }
+
+    public void addUserToGroup(String groupname, String username) throws SQLException{
+        ContentValues map = new ContentValues();
+
+        Cursor c = toQuery(groupname);
+        String currentArrayString = "";
+        if(c.moveToFirst()){
+            c.moveToFirst();
+            currentArrayString = c.getString(1);
+        }
+        currentArrayString += strSeparator + username;
+        map.put(GroupDB.KEY_PEOPLE_LIST, currentArrayString);
+        database.update(DATABASE_TABLE, map, KEY_GROUPNAME + "=\"" + groupname + "\"",null);
     }
 
     //Thanks to Muhammad Nabeel Arif from stackoverflow.com 1/29/12
@@ -106,7 +118,10 @@ public class GroupDB {
         return str;
     }
     public static String[] convertStringToArray(String str){
-        return str.split(strSeparator);
+        System.out.println(str);
+        String[] arr = str.split(strSeparator);
+        System.out.println(arr.toString());
+        return arr;
     }
 
     private static class DataHelper extends SQLiteOpenHelper {

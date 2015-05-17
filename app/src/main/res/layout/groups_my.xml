@@ -14,18 +14,19 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/group_button_layout">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:id="@+id/button2"
-                android:background="@drawable/group_button"
-                android:text="Rehearsal"
-                android:gravity="right"
-                android:textAlignment="gravity"
-                android:paddingRight="30dp"
-                android:paddingTop="60dp" />
+            <!--<Button-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="160dp"-->
+                <!--android:id="@+id/button2"-->
+                <!--android:background="@drawable/group_button"-->
+                <!--android:text="Rehearsal"-->
+                <!--android:gravity="right"-->
+                <!--android:textAlignment="gravity"-->
+                <!--android:paddingRight="30dp"-->
+                <!--android:paddingTop="60dp" />-->
 
             <Button
                 android:layout_width="match_parent"
