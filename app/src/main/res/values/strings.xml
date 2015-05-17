@@ -17,5 +17,6 @@
     <string name="title_activity_search_groups">SearchGroupsActivity</string>
     <string name="title_activity_new_group">newGroupActivity</string>
     <string name="title_activity_searchable">SearchableActivity</string>
+    <string name="title_activity_find_groups">FindGroupsActivity</string>
 
 </resources>

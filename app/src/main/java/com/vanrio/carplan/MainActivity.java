@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @Override
         public void onClick(View v){
             if(v.getId() == R.id.newButton){
-                Intent i = new Intent(getActivity(), SearchGroupsActivity.class);
+                Intent i = new Intent(getActivity(), FindGroupsActivity.class);
                 i.putExtra("my_username", getActivity().getIntent().getStringExtra("my_username"));
                 startActivity(i);
             }
